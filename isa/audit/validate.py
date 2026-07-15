@@ -19,7 +19,9 @@ QA Audit Prompt의 10대 검증영역 중 '기계적으로 검증 가능한' 항
     python3 validate.py ../isa_qa_batch01.jsonl
 종료코드 0=통과(에러 없음), 1=에러 존재.
 """
+import glob
 import json
+import os
 import re
 import sys
 from collections import Counter
@@ -53,6 +55,27 @@ def load(path):
             except json.JSONDecodeError as e:
                 errors.append(f"[JSON] {ln}행 파싱 실패: {e}")
     return items, errors
+
+
+def corpus_ids(path):
+    """같은 폴더의 모든 isa_qa_batch*.jsonl에서 id를 모아 배치 간 related_ids
+    무결성 검증에 사용한다. 검증 대상 파일과 형제 배치 파일을 함께 본다."""
+    base = os.path.dirname(os.path.abspath(path))
+    ids = set()
+    for fp in glob.glob(os.path.join(base, "isa_qa_batch*.jsonl")):
+        try:
+            with open(fp, encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        ids.add(json.loads(line).get("id"))
+                    except json.JSONDecodeError:
+                        pass
+        except OSError:
+            pass
+    return ids
 
 
 def validate(path):
@@ -98,8 +121,8 @@ def validate(path):
     for d in dup_ids:
         errors.append(f"[ID중복] '{d}' 가 2회 이상 등장")
 
-    # related_ids 무결성
-    idset = set(ids)
+    # related_ids 무결성 (배치 간: 같은 폴더의 모든 batch 파일 id를 유효 범위로 인정)
+    idset = set(ids) | corpus_ids(path)
     for it in items:
         for rid in it.get("related_ids", []):
             if rid not in idset:
