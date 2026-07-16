@@ -1,0 +1,317 @@
+<style>
+  :root{
+    --paper:#F6F7F9; --card:#FFFFFF; --ink:#18202B; --ink-soft:#4A5568;
+    --line:#DCE0E7; --line-soft:#E9ECF1;
+    --accent:#274B86; --accent-soft:#EAF0F9; --accent-ink:#1C3A6B;
+    --hi:#2F8A5B; --hi-bg:#E7F3EC;
+    --mid:#B98423; --mid-bg:#F7EED9;
+    --lo:#B24A38; --lo-bg:#F6E4DF;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;
+    --shadow:0 1px 2px rgba(24,32,43,.04),0 4px 16px rgba(24,32,43,.05);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#0F1319; --card:#161C25; --ink:#E6EAF0; --ink-soft:#9AA6B5;
+      --line:#28313E; --line-soft:#20272F;
+      --accent:#6E9BE0; --accent-soft:#17263D; --accent-ink:#A9C4EE;
+      --hi:#5FB98A; --hi-bg:#132A20; --mid:#D6A94F; --mid-bg:#2C2410; --lo:#D9745F; --lo-bg:#2E1A16;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0F1319; --card:#161C25; --ink:#E6EAF0; --ink-soft:#9AA6B5;
+    --line:#28313E; --line-soft:#20272F;
+    --accent:#6E9BE0; --accent-soft:#17263D; --accent-ink:#A9C4EE;
+    --hi:#5FB98A; --hi-bg:#132A20; --mid:#D6A94F; --mid-bg:#2C2410; --lo:#D9745F; --lo-bg:#2E1A16;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"]{
+    --paper:#F6F7F9; --card:#FFFFFF; --ink:#18202B; --ink-soft:#4A5568;
+    --line:#DCE0E7; --line-soft:#E9ECF1;
+    --accent:#274B86; --accent-soft:#EAF0F9; --accent-ink:#1C3A6B;
+    --hi:#2F8A5B; --hi-bg:#E7F3EC; --mid:#B98423; --mid-bg:#F7EED9; --lo:#B24A38; --lo-bg:#F6E4DF;
+    --shadow:0 1px 2px rgba(24,32,43,.04),0 4px 16px rgba(24,32,43,.05);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+    line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16px}
+  .wrap{max-width:1060px;margin:0 auto;padding:clamp(20px,5vw,56px) clamp(16px,4vw,40px)}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);font-weight:600}
+  h1{font-size:clamp(26px,4.4vw,40px);line-height:1.15;margin:.35em 0 .3em;text-wrap:balance;letter-spacing:-.01em}
+  h2{font-size:clamp(19px,2.6vw,24px);margin:0 0 .1em;letter-spacing:-.01em;text-wrap:balance}
+  .lede{color:var(--ink-soft);font-size:clamp(15px,1.8vw,17px);max-width:64ch;margin:0}
+  section{margin-top:clamp(34px,5vw,58px)}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+  .sec-head .n{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:600;
+    border:1px solid var(--line);border-radius:6px;padding:2px 8px;background:var(--card)}
+
+  /* summary strip */
+  .strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow)}
+  .stat .k{font-size:12.5px;color:var(--ink-soft);letter-spacing:.02em}
+  .stat .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(24px,3.4vw,32px);
+    font-weight:600;line-height:1.1;margin-top:4px}
+  .stat .sub{font-size:12px;color:var(--ink-soft);margin-top:2px}
+  .stat.accent{background:var(--accent-soft);border-color:transparent}
+  .stat.accent .v{color:var(--accent-ink)}
+
+  /* proportion bar */
+  .barwrap{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow)}
+  .bar{display:flex;height:22px;border-radius:6px;overflow:hidden;border:1px solid var(--line-soft)}
+  .bar span{display:block}
+  .legend{display:flex;flex-wrap:wrap;gap:14px 20px;margin-top:14px}
+  .legend div{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft)}
+  .sw{width:11px;height:11px;border-radius:3px;flex:none}
+
+  /* category cards */
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 20px 18px;
+    box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--rail,var(--accent))}
+  .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .card h3{margin:0;font-size:16.5px;letter-spacing:-.01em}
+  .card .cnt{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:30px;font-weight:600;line-height:1}
+  .card .cnt small{font-size:13px;color:var(--ink-soft);font-weight:500}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:11.5px;font-weight:600;letter-spacing:.02em;padding:3px 9px;border-radius:999px;
+    display:inline-flex;align-items:center;gap:5px;border:1px solid transparent}
+  .chip.hi{background:var(--hi-bg);color:var(--hi)}
+  .chip.mid{background:var(--mid-bg);color:var(--mid)}
+  .chip.lo{background:var(--lo-bg);color:var(--lo)}
+  .chip.pri{background:var(--card);color:var(--ink-soft);border-color:var(--line)}
+  .card .row{font-size:13.5px;color:var(--ink-soft);display:flex;gap:8px}
+  .card .row b{color:var(--ink);font-weight:600;flex:none;min-width:42px}
+  .ids{font-family:var(--mono);font-size:12px;color:var(--ink-soft);background:var(--paper);
+    border:1px solid var(--line-soft);border-radius:7px;padding:7px 9px;word-spacing:2px;line-height:1.7}
+  .verdict{font-size:13px;padding-top:2px;color:var(--ink)}
+
+  /* demonstration */
+  .demo{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+  .demo-h{padding:18px 22px;background:var(--accent-soft);border-bottom:1px solid var(--line)}
+  .demo-h .eyebrow{color:var(--accent-ink)}
+  .demo-b{padding:22px}
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+  .step{position:relative;padding:0 16px}
+  .step:not(:last-child){border-right:1px dashed var(--line)}
+  .step .s-n{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--accent);font-weight:600;text-transform:uppercase}
+  .step h4{margin:6px 0 5px;font-size:14.5px}
+  .step p{margin:0;font-size:13px;color:var(--ink-soft)}
+  .finding{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .fbox{border:1px solid var(--line);border-radius:11px;padding:15px 16px}
+  .fbox.was{background:var(--lo-bg);border-color:transparent}
+  .fbox.now{background:var(--hi-bg);border-color:transparent}
+  .fbox .lab{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+  .fbox.was .lab{color:var(--lo)} .fbox.now .lab{color:var(--hi)}
+  .fbox .code{font-family:var(--mono);font-size:15px;font-weight:600;margin:6px 0 4px}
+  .fbox p{margin:0;font-size:12.5px;color:var(--ink-soft)}
+  .note{margin-top:18px;font-size:13px;color:var(--ink-soft);border-left:3px solid var(--accent);
+    padding:2px 0 2px 14px;background:linear-gradient(90deg,var(--accent-soft),transparent 70%)}
+
+  /* recommendation table */
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:13.5px}
+  th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line-soft)}
+  th{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;background:var(--paper)}
+  tr:last-child td{border-bottom:none}
+  td.mono,th.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  td .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:middle}
+
+  .foot{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-soft)}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line)}
+  @media (max-width:720px){
+    .strip{grid-template-columns:repeat(2,1fr)}
+    .flow{grid-template-columns:1fr;gap:14px}
+    .step{padding:0 0 14px}
+    .step:not(:last-child){border-right:none;border-bottom:1px dashed var(--line)}
+    .finding{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">ISA 문제은행 · 검증 영역 진단 데모</div>
+    <h1>verification 292문항, 어디부터 확정할 것인가</h1>
+    <p class="lede">전체 500문항 중 <b>292문항</b>이 <span class="mono">verification_needed=true</span>로 표시돼 있다.
+    이들을 확정 근거와 검증 난이도로 6개 영역으로 나누고, 실제 검증이 어떻게 작동하는지
+    시행령 조문 사례로 시연한다.</p>
+  </header>
+
+  <section aria-label="요약">
+    <div class="strip">
+      <div class="stat"><div class="k">전체 문항</div><div class="v">500</div><div class="sub">Batch 01–10</div></div>
+      <div class="stat"><div class="k">확정 완료</div><div class="v">208</div><div class="sub">기계검증·계산·확립 규칙</div></div>
+      <div class="stat accent"><div class="k">확인 필요</div><div class="v">292</div><div class="sub">58.4% · 아래 6개 영역</div></div>
+      <div class="stat"><div class="k">2차 재검증 해제</div><div class="v">33</div><div class="sub">권위 출처 대조 완료</div></div>
+    </div>
+
+    <div class="barwrap">
+      <div class="bar" role="img" aria-label="검증 영역별 비중">
+        <span style="width:34.6%;background:var(--lo)" title="증권사 운영기준 101"></span>
+        <span style="width:29.5%;background:var(--mid)" title="기타 세부수치 86"></span>
+        <span style="width:10.6%;background:var(--hi)" title="시행령 조문 31"></span>
+        <span style="width:9.6%;background:var(--accent)" title="유권해석 28"></span>
+        <span style="width:8.2%;background:#8a6fb0" title="상속·증여세 24"></span>
+        <span style="width:7.5%;background:#4a5568" title="외국세법 22"></span>
+      </div>
+      <div class="legend">
+        <div><span class="sw" style="background:var(--lo)"></span>증권사 운영기준·분쟁 <b class="mono">&nbsp;101</b></div>
+        <div><span class="sw" style="background:var(--mid)"></span>기타 세부수치·실무 <b class="mono">&nbsp;86</b></div>
+        <div><span class="sw" style="background:var(--hi)"></span>시행령 세부 조문 <b class="mono">&nbsp;31</b></div>
+        <div><span class="sw" style="background:var(--accent)"></span>국세청 유권해석 <b class="mono">&nbsp;28</b></div>
+        <div><span class="sw" style="background:#8a6fb0"></span>상속·증여세 <b class="mono">&nbsp;24</b></div>
+        <div><span class="sw" style="background:#4a5568"></span>외국세법·조세조약 <b class="mono">&nbsp;22</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-label="검증 영역">
+    <div class="sec-head"><span class="n">A</span><h2>6개 검증 영역 — 확정 가능성 순</h2></div>
+    <p class="lede" style="margin-bottom:20px">각 영역을 <b>확정 근거(source)</b>와 <b>검증 난이도</b>로 평가했다.
+    난이도가 낮을수록(=확정 가능성 높음) 먼저 손대는 것이 효율적이다.</p>
+    <div class="cards">
+
+      <div class="card" style="--rail:var(--hi)">
+        <div class="top">
+          <div><h3>시행령 세부 조문</h3><div class="chips" style="margin-top:6px">
+            <span class="chip hi">확정 가능성 높음</span><span class="chip pri">우선순위 1</span></div></div>
+          <div class="cnt">31<br><small>문항</small></div>
+        </div>
+        <div class="row"><b>근거</b><span>국가법령정보센터 조특법 시행령 원문</span></div>
+        <div class="row"><b>방법</b><span>law.go.kr에서 조문 번호·항·호 직접 대조</span></div>
+        <div class="ids">B01-001 · B01-043 · B01-049 · B02-002 · B02-008 · B02-013 …</div>
+        <div class="verdict">✔ 공개 원문으로 <b>기계적 확정 가능</b>. 아래 데모가 이 영역 사례.</div>
+      </div>
+
+      <div class="card" style="--rail:#8a6fb0">
+        <div class="top">
+          <div><h3>상속·증여세</h3><div class="chips" style="margin-top:6px">
+            <span class="chip hi">확정 가능성 높음</span><span class="chip pri">우선순위 2</span></div></div>
+          <div class="cnt">24<br><small>문항</small></div>
+        </div>
+        <div class="row"><b>근거</b><span>상속세 및 증여세법 (공제·세율 공개 수치)</span></div>
+        <div class="row"><b>방법</b><span>일괄공제 5억·배우자증여 6억·세율표 대조</span></div>
+        <div class="ids">B06-004 · B06-011 · B06-012 · B06-026 · B06-032 · B06-036 …</div>
+        <div class="verdict">✔ 수치가 법령에 명시 — <b>대조로 확정</b>. ISA 소득세와 별개 세목임에 유의.</div>
+      </div>
+
+      <div class="card" style="--rail:var(--mid)">
+        <div class="top">
+          <div><h3>기타 세부수치·실무</h3><div class="chips" style="margin-top:6px">
+            <span class="chip mid">확정 가능성 중간</span><span class="chip pri">우선순위 2</span></div></div>
+          <div class="cnt">86<br><small>문항</small></div>
+        </div>
+        <div class="row"><b>근거</b><span>소득세법·조특법·국세청 공식 안내</span></div>
+        <div class="row"><b>방법</b><span>연금·과표기준가 등 항목별 수치 대조</span></div>
+        <div class="ids">B01-028 · B01-034 · B01-035 · B01-048 · B03-015 · B04-029 …</div>
+        <div class="verdict">◐ 상당수가 공식자료로 확정 가능(2차 재검증서 연금 수치 다수 해제됨).</div>
+      </div>
+
+      <div class="card" style="--rail:var(--accent)">
+        <div class="top">
+          <div><h3>국세청 유권해석·추징</h3><div class="chips" style="margin-top:6px">
+            <span class="chip mid">확정 가능성 중간</span><span class="chip pri">우선순위 3</span></div></div>
+          <div class="cnt">28<br><small>문항</small></div>
+        </div>
+        <div class="row"><b>근거</b><span>국세청 유권해석·조세심판례</span></div>
+        <div class="row"><b>방법</b><span>해석사례 검색 — 없으면 조건부 유지</span></div>
+        <div class="ids">B01-039 · B01-040 · B02-030 · B06-018 · B10-039 …</div>
+        <div class="verdict">◐ 압류·회생 추징, 연장 시 한도 재부여 등 <b>결론이 갈리는</b> 쟁점. 조건부 정답이 정상.</div>
+      </div>
+
+      <div class="card" style="--rail:#4a5568">
+        <div class="top">
+          <div><h3>외국세법·조세조약</h3><div class="chips" style="margin-top:6px">
+            <span class="chip lo">확정 가능성 낮음</span><span class="chip pri">우선순위 4</span></div></div>
+          <div class="cnt">22<br><small>문항</small></div>
+        </div>
+        <div class="row"><b>근거</b><span>미국 세법(PFIC/FBAR/FATCA)·조세조약</span></div>
+        <div class="row"><b>방법</b><span>미국 세무 전문가 확인 — 한국 자료로 단정 불가</span></div>
+        <div class="ids">B07-011 · B07-012 · B07-016 · B07-022 · B07-024 · B07-050 …</div>
+        <div class="verdict">✖ 관할이 한국 밖 — <b>전문가 확인 전제</b>로 조건부 유지가 옳다.</div>
+      </div>
+
+      <div class="card" style="--rail:var(--lo)">
+        <div class="top">
+          <div><h3>증권사 운영기준·분쟁</h3><div class="chips" style="margin-top:6px">
+            <span class="chip lo">단일 정답 없음</span><span class="chip pri">우선순위 5</span></div></div>
+          <div class="cnt">101<br><small>문항</small></div>
+        </div>
+        <div class="row"><b>근거</b><span>각 증권사 운영기준·약관 (회사별 상이)</span></div>
+        <div class="row"><b>방법</b><span>회사별 확인 — 전국 공통 정답이 존재하지 않음</span></div>
+        <div class="ids">B01-006 · B01-008 · B09-002 · B09-007 · B09-017 …</div>
+        <div class="verdict">✖ 본질적으로 <b>회사별로 다름</b>. "확인 필요"가 정확한 상태 — 확정 대상이 아니다.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <section aria-label="시연">
+    <div class="sec-head"><span class="n">B</span><h2>라이브 시연 — 시행령 조문 확정</h2></div>
+    <div class="demo">
+      <div class="demo-h">
+        <div class="eyebrow">Worked example · 우선순위 1 영역</div>
+        <h2 style="margin-top:6px">"조특법 시행령 ISA 조항은 몇 조인가?"</h2>
+      </div>
+      <div class="demo-b">
+        <div class="flow">
+          <div class="step"><div class="s-n">01 추정</div><h4>생성 시 표시</h4>
+            <p>법 조문 <span class="mono">제91조의18</span>을 그대로 차용해 시행령도 <span class="mono">제93조의18</span>로 추정 → 확신 낮아 플래그.</p></div>
+          <div class="step"><div class="s-n">02 검색</div><h4>공식 원문 조회</h4>
+            <p>국가법령정보센터에서 "조특법 시행령 + 개인종합자산관리계좌" 검색.</p></div>
+          <div class="step"><div class="s-n">03 발견</div><h4>불일치 확인</h4>
+            <p>ISA 시행령 규정은 <span class="mono">제93조의4</span> 계열, 부득이한 사유는 <span class="mono">제93조의4 제12항</span>으로 확인됨.</p></div>
+          <div class="step"><div class="s-n">04 확정</div><h4>정정·근거 기재</h4>
+            <p>추정치 폐기 → 원문 대조로 <span class="mono">제93조의4</span> 확정, <span class="mono">verification_needed=false</span>.</p></div>
+        </div>
+
+        <div class="finding">
+          <div class="fbox was"><div class="lab">추정 (틀렸을 가능성 높음)</div>
+            <div class="code">시행령 제93조의18</div>
+            <p>법 조문 번호를 시행령에 그대로 대입한 추정. 환각을 피하려 값을 확정하지 않고 플래그로 남긴 상태.</p></div>
+          <div class="fbox now"><div class="lab">검증 결과 (원문 대조 권장)</div>
+            <div class="code">시행령 제93조의4</div>
+            <p>ISA 과세특례의 시행령 위임 규정은 제93조의4 계열. 부득이한 사유·손익통산 유지는 제93조의4 제12항으로 확인.</p></div>
+        </div>
+
+        <p class="note"><b>이 데모의 교훈</b> — 법률 조문 번호(제91조의18)와 시행령 조문 번호(제93조의4)는 다르다.
+        추정으로 채웠다면 <b>틀린 조문을 확정 답변</b>할 뻔했다. 그래서 확신 낮은 조문은 지어내지 않고 플래그로 남긴다.
+        같은 방식으로 <b>시행령 31문항 전체</b>를 law.go.kr 원문 대조로 확정할 수 있다.
+        <br><span style="opacity:.75">※ 위 제93조의4는 검색 요약 기반 — 최종 확정은 국가법령정보센터 원문 캡처로 아카이브 권장.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-label="권고">
+    <div class="sec-head"><span class="n">C</span><h2>추가 검증 권고 순서</h2></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th>순위</th><th>영역</th><th class="num">문항</th><th>확정 근거</th><th>검증 결과 예상</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="mono">1</td><td><span class="dot" style="background:var(--hi)"></span>시행령 세부 조문</td><td class="mono">31</td><td>국가법령정보센터 원문</td><td>대부분 확정 가능</td></tr>
+          <tr><td class="mono">2</td><td><span class="dot" style="background:#8a6fb0"></span>상속·증여세</td><td class="mono">24</td><td>상증세법 공개 수치</td><td>대부분 확정 가능</td></tr>
+          <tr><td class="mono">2</td><td><span class="dot" style="background:var(--mid)"></span>기타 세부수치</td><td class="mono">86</td><td>소득세법·국세청 안내</td><td>다수 확정 가능</td></tr>
+          <tr><td class="mono">3</td><td><span class="dot" style="background:var(--accent)"></span>국세청 유권해석</td><td class="mono">28</td><td>유권해석·심판례</td><td>일부만 확정, 나머지 조건부</td></tr>
+          <tr><td class="mono">4</td><td><span class="dot" style="background:#4a5568"></span>외국세법·조세조약</td><td class="mono">22</td><td>미국 세법·전문가</td><td>전문가 확인 전제</td></tr>
+          <tr><td class="mono">5</td><td><span class="dot" style="background:var(--lo)"></span>증권사 운영기준</td><td class="mono">101</td><td>회사별 운영기준</td><td>단일 정답 없음 · 조건부 유지</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lede" style="margin-top:16px">확정 가능 영역(1–2)은 약 <b class="mono">141문항</b>.
+    운영기준 101문항은 성격상 "회사별 상이"가 정답이므로 <b>영구 조건부</b>로 두는 것이 정확하다.
+    즉 실질적으로 <b>추가 확정 대상은 약 141 + 유권해석 일부</b>다.</p>
+  </section>
+
+  <div class="foot">
+    데이터: <span class="mono">isa/isa_qa_batch01–10.jsonl</span> (500문항) 중 <span class="mono">verification_needed=true</span> 292문항 ·
+    분류 기준: 각 문항 <span class="mono">verification_note</span> · 시연 근거: 국가법령정보센터 검색(2026-07).
+    상세 재검증 이력은 <span class="mono">audit/RE_VERIFICATION_2026-07.md</span>.
+  </div>
+
+</div>
